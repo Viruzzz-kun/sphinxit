@@ -6,7 +6,7 @@ python:
   - "3.5"
 script: nosetests
 install:
-  - if [[ $TRAVIS_PYTHON_VERSION <= '2.6' ]]; then pip install --use-mirrors unittest2; fi
+  - if [[ $TRAVIS_PYTHON_VERSION == '2.6' ]]; then pip install --use-mirrors unittest2; fi
   - "pip install -r reqs.pip --use-mirrors"
 notifications:
   email:
