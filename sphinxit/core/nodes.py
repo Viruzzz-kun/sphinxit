@@ -55,7 +55,7 @@ class SelectFromContainer(ConfigMixin):
     def add_or(self, or_instance):
         assert isinstance(or_instance, OR), type(or_instance)
         with AliasFieldCtx(
-            or_instance.with_config(self.config).lex(), 'cnd'
+                or_instance.with_config(self.config).lex(), 'cnd'
         ).with_config(self.config) as lex:
             if lex and lex not in self.or_fields:
                 self.or_fields.append(lex)
@@ -243,70 +243,70 @@ class OptionsContainer(ConfigMixin):
 
     def add_ranker(self, ranker):
         with OptionsCtx(
-            'ranker', ranker
+                'ranker', ranker
         ).with_config(self.config) as lex:
             if lex:
                 self.options.append(lex)
 
     def add_max_matches(self, max_matches):
         with OptionsCtx(
-            'max_matches', max_matches
+                'max_matches', max_matches
         ).with_config(self.config) as lex:
             if lex:
                 self.options.append(lex)
 
     def add_cutoff(self, cutoff):
         with OptionsCtx(
-            'cutoff', cutoff
+                'cutoff', cutoff
         ).with_config(self.config) as lex:
             if lex:
                 self.options.append(lex)
 
     def add_max_query_time(self, max_query_time):
         with OptionsCtx(
-            'max_query_time', max_query_time
+                'max_query_time', max_query_time
         ).with_config(self.config) as lex:
             if lex:
                 self.options.append(lex)
 
     def add_retry_count(self, retry_count):
         with OptionsCtx(
-            'retry_count', retry_count
+                'retry_count', retry_count
         ).with_config(self.config) as lex:
             if lex:
                 self.options.append(lex)
 
     def add_retry_delay(self, retry_delay):
         with OptionsCtx(
-            'retry_delay', retry_delay
+                'retry_delay', retry_delay
         ).with_config(self.config) as lex:
             if lex:
                 self.options.append(lex)
 
     def add_field_weights(self, **kwargs):
         with OptionsCtx(
-            'field_weights', kwargs
+                'field_weights', kwargs
         ).with_config(self.config) as lex:
             if lex:
                 self.options.append(lex)
 
     def add_index_weights(self, **kwargs):
         with OptionsCtx(
-            'index_weights', kwargs
+                'index_weights', kwargs
         ).with_config(self.config) as lex:
             if lex:
                 self.options.append(lex)
 
     def add_reverse_scan(self, is_reverse=True):
         with OptionsCtx(
-            'reverse_scan', is_reverse
+                'reverse_scan', is_reverse
         ).with_config(self.config) as lex:
             if lex:
                 self.options.append(lex)
 
     def add_comment(self, comment):
         with OptionsCtx(
-            'comment', comment
+                'comment', comment
         ).with_config(self.config) as lex:
             if lex:
                 self.options.append(lex)
@@ -415,7 +415,7 @@ class AggregateObject(ConfigMixin):
     def lex(self):
         raw_field, raw_alias = self.raw_attrs
         with AliasFieldCtx(
-            raw_field, raw_alias
+                raw_field, raw_alias
         ).called_by(
             self.__class__
         ).with_config(
@@ -436,7 +436,7 @@ class RawAttr(ConfigMixin):
 
     def lex(self):
         with AliasFieldCtx(
-            self.field, self.alias
+                self.field, self.alias
         ).called_by(
             self.__class__
         ).with_config(
@@ -480,7 +480,7 @@ class Count(AggregateObject):
     def lex(self):
         raw_field, raw_alias = self.raw_attrs
         with AliasFieldCtx(
-            raw_field, raw_alias
+                raw_field, raw_alias
         ).called_by(
             self.__class__
         ).with_config(

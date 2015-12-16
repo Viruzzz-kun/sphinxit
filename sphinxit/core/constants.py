@@ -10,7 +10,6 @@
 
 from collections import namedtuple
 
-
 RESERVED_KEYWORDS = (
     'AND',
     'AS',
@@ -63,7 +62,6 @@ RESERVED_KEYWORDS = (
     'WHERE',
     'WITHIN'
 )
-
 
 ESCAPED_CHARS = namedtuple('EscapedChars', ['single_escape', 'double_escape'])(
     single_escape=("'", '+', '[', ']', '=', '*'),
