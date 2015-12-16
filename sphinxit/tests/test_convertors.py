@@ -108,10 +108,8 @@ class TestFilterCtx(unittest.TestCase):
         with FilterCtxStrict('age__eq', '25') as value:
             self.assertEqual(value, 'age=25')
 
-        self.assertRaises(
-            SphinxQLSyntaxException,
-            lambda: FilterCtxStrict('age__eq', '25d').__enter__()
-        )
+        with FilterCtxStrict('age__eq', '25d') as value:
+            self.assertEqual(value, "age='25d'")
 
     def test_neq_non_strict(self):
         with FilterCtxSoft('age__neq', 25) as value:
@@ -130,10 +128,8 @@ class TestFilterCtx(unittest.TestCase):
         with FilterCtxStrict('age__neq', '25') as value:
             self.assertEqual(value, 'age!=25')
 
-        self.assertRaises(
-            SphinxQLSyntaxException,
-            lambda: FilterCtxStrict('age__neq', '25d').__enter__()
-        )
+        with FilterCtxStrict('age__neq', '25d') as value:
+            self.assertEqual(value, "age!='25d'")
 
     def test_gt_non_strict(self):
         with FilterCtxSoft('age__gt', 25) as value:
@@ -152,10 +148,8 @@ class TestFilterCtx(unittest.TestCase):
         with FilterCtxStrict('age__gt', '25') as value:
             self.assertEqual(value, 'age>25')
 
-        self.assertRaises(
-            SphinxQLSyntaxException,
-            lambda: FilterCtxStrict('age__gt', '25d').__enter__()
-        )
+        with FilterCtxStrict('age__gt', '25d') as value:
+            self.assertEqual(value, "age>'25d'")
 
     def test_gte_non_strict(self):
         with FilterCtxSoft('age__gte', 25) as value:
@@ -174,10 +168,8 @@ class TestFilterCtx(unittest.TestCase):
         with FilterCtxStrict('age__gte', '25') as value:
             self.assertEqual(value, 'age>=25')
 
-        self.assertRaises(
-            SphinxQLSyntaxException,
-            lambda: FilterCtxStrict('age__gte', '25d').__enter__()
-        )
+        with FilterCtxStrict('age__gte', '25d') as value:
+            self.assertEqual(value, "age>='25d'")
 
     def test_lt_non_strict(self):
         with FilterCtxSoft('age__lt', 25) as value:
@@ -196,10 +188,8 @@ class TestFilterCtx(unittest.TestCase):
         with FilterCtxStrict('age__lt', '25') as value:
             self.assertEqual(value, 'age<25')
 
-        self.assertRaises(
-            SphinxQLSyntaxException,
-            lambda: FilterCtxStrict('age__lt', '25d').__enter__()
-        )
+        with FilterCtxStrict('age__lt', '25d') as value:
+            self.assertEqual(value, "age<'25d'")
 
     def test_lte_non_strict(self):
         with FilterCtxSoft('age__lte', 25) as value:
@@ -218,10 +208,8 @@ class TestFilterCtx(unittest.TestCase):
         with FilterCtxStrict('age__lte', '25') as value:
             self.assertEqual(value, 'age<=25')
 
-        self.assertRaises(
-            SphinxQLSyntaxException,
-            lambda: FilterCtxStrict('age__lte', '25d').__enter__()
-        )
+        with FilterCtxStrict('age__lte', '25d') as value:
+            self.assertEqual(value, "age<='25d'")
 
     def test_in_non_strict(self):
         with FilterCtxSoft('age__in', (1, 2, 3)) as value:

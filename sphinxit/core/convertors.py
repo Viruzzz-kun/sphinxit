@@ -18,7 +18,9 @@ from sphinxit.core.constants import ESCAPED_CHARS, RESERVED_KEYWORDS
 from sphinxit.core.exceptions import SphinxQLSyntaxException
 from sphinxit.core.helpers import (
     list_of_integers_only,
+    list_of_strings_only,
     int_from_digit,
+    string_for_value,
     unix_timestamp
 )
 from sphinxit.core.mixins import CtxMixin
@@ -33,6 +35,7 @@ class FilterCtx(CtxMixin):
         '__lt': '{a}<{v}',
         '__lte': '{a}<={v}',
         '__in': '{a} IN ({v})',
+        '__notin': '{a} NOT IN ({v})',
         '__between': '{a} BETWEEN {f_v} AND {s_v}',
     }
 
@@ -44,15 +47,28 @@ class FilterCtx(CtxMixin):
     def __enter__(self):
         v_attr = self.v_attr
         if isinstance(v_attr, six.string_types):
-            v_attr = int_from_digit(
-                v_attr,
-                is_strict=self.is_strict
-            )
+            try:
+                v_attr = int_from_digit(
+                    v_attr,
+                    is_strict=self.is_strict
+                )
+            except SphinxQLSyntaxException:
+                v_attr = string_for_value(v_attr, is_strict=self.is_strict)
+
         if isinstance(self.v_attr, (tuple, list)):
-            v_attr = list_of_integers_only(
-                v_attr,
-                is_strict=self.is_strict
-            )
+            # This tuple or list can be list of integer or strings
+            try:
+                v_attr = list_of_integers_only(
+                                            v_attr,
+                                            is_strict=self.is_strict
+                                            )
+            except SphinxQLSyntaxException:
+                #If This list is not integer check if it is strings
+                v_attr = list_of_strings_only(
+                                            v_attr,
+                                            is_strict=self.is_strict
+                                            )
+
         if isinstance(self.v_attr, (datetime, date)):
             v_attr = unix_timestamp(self.v_attr)
 
@@ -64,7 +80,7 @@ class FilterCtx(CtxMixin):
                 continue
 
             if (
-                ending not in ('__between', '__in')
+                ending not in ('__between', '__in', '__notin')
                 and isinstance(v_attr, (tuple, list))
                 and not self.__exit__(
                     exc_val=SphinxQLSyntaxException(
@@ -76,7 +92,7 @@ class FilterCtx(CtxMixin):
                 continue
 
             if (
-                ending in ('__between', '__in')
+                ending in ('__between', '__in', '__notin')
                 and not isinstance(v_attr, (tuple, list))
                 and not self.__exit__(
                     exc_val=SphinxQLSyntaxException(
@@ -109,7 +125,7 @@ class FilterCtx(CtxMixin):
                     s_v=s_v
                 )
 
-            if ending == '__in':
+            if ending in ('__in', '__notin'):
                 v = ','.join([str(v) for v in v_attr])
 
             return self._allowed_conditions_map[ending].format(a=a, v=v)
