@@ -278,21 +278,16 @@ class Search(ConfigMixin):
             x.lex() for x in sparse_free_sequence(actual_nodes)
         ])
 
-    def ask(self, subqueries=None, facets=None):
-        facets_used = False
-        if facets:
-            facets_used = True
-            query = '%s %s' % (self.lex(), facets)
-            query_batch = [(query, getattr(self, '_name', 'result'))]
-        else:
-            query_batch = [(self.lex(), getattr(self, '_name', 'result'))]
+    def ask(self, subqueries=None):
+
+        query_batch = [(self.lex(), getattr(self, '_name', 'result'))]
 
         if subqueries is not None:
             query_batch.extend([
                 (s_inst.lex(), getattr(s_inst, '_name', 'result_%s' % id(s_inst)))
                 for s_inst in subqueries
             ])
-        return self.connector.execute(query_batch, facets_used=True)
+        return self.connector.execute(query_batch)
 
 
 class Snippet(ConfigMixin):
