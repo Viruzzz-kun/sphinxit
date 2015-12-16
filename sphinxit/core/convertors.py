@@ -11,9 +11,8 @@
 from __future__ import unicode_literals
 
 import re
-from datetime import datetime, date
-
 import six
+from datetime import datetime, date
 
 from sphinxit.core.constants import ESCAPED_CHARS, RESERVED_KEYWORDS
 from sphinxit.core.exceptions import SphinxQLSyntaxException
@@ -60,15 +59,16 @@ class FilterCtx(CtxMixin):
             # This tuple or list can be list of integer or strings
             try:
                 v_attr = list_of_integers_only(
-                    v_attr,
-                    is_strict=self.is_strict
-                )
+                                            v_attr,
+                                            is_strict=self.is_strict
+                                            )
             except SphinxQLSyntaxException:
-                # If This list is not integer check if it is strings
+                #If This list is not integer check if it is strings
                 v_attr = list_of_strings_only(
-                    v_attr,
-                    is_strict=self.is_strict
-                )
+                                            v_attr,
+                                            is_strict=self.is_strict
+                                            )
+
 
         if isinstance(self.v_attr, (datetime, date)):
             v_attr = unix_timestamp(self.v_attr)
@@ -81,26 +81,26 @@ class FilterCtx(CtxMixin):
                 continue
 
             if (
-                                ending not in ('__between', '__in', '__notin')
-                        and isinstance(v_attr, (tuple, list))
-                    and not self.__exit__(
-                        exc_val=SphinxQLSyntaxException(
-                                '%s found but not allowed for %s condition' %
-                                (self.v_attr, self.k_attr)
-                        )
+                ending not in ('__between', '__in', '__notin')
+                and isinstance(v_attr, (tuple, list))
+                and not self.__exit__(
+                    exc_val=SphinxQLSyntaxException(
+                        '%s found but not allowed for %s condition' %
+                        (self.v_attr, self.k_attr)
                     )
+                )
             ):
                 continue
 
             if (
-                                ending in ('__between', '__in', '__notin')
-                        and not isinstance(v_attr, (tuple, list))
-                    and not self.__exit__(
-                        exc_val=SphinxQLSyntaxException(
-                                '%s condition found but the type of %s is not list or tuple' %
-                                (self.k_attr, self.v_attr)
-                        )
+                ending in ('__between', '__in', '__notin')
+                and not isinstance(v_attr, (tuple, list))
+                and not self.__exit__(
+                    exc_val=SphinxQLSyntaxException(
+                        '%s condition found but the type of %s is not list or tuple' %
+                        (self.k_attr, self.v_attr)
                     )
+                )
             ):
                 continue
 
@@ -109,13 +109,13 @@ class FilterCtx(CtxMixin):
 
             if ending == '__between':
                 if (
-                            (len(v_attr) != 2 or len(v_attr) != len(self.v_attr))
-                        and not self.__exit__(
-                            exc_val=SphinxQLSyntaxException(
-                                    '%s condition wants a pair value and %s is not' %
-                                    (self.k_attr, self.v_attr)
-                            )
+                    (len(v_attr) != 2 or len(v_attr) != len(self.v_attr))
+                    and not self.__exit__(
+                        exc_val=SphinxQLSyntaxException(
+                            '%s condition wants a pair value and %s is not' %
+                            (self.k_attr, self.v_attr)
                         )
+                    )
                 ):
                     continue
 
@@ -149,6 +149,7 @@ class ORFilterCtx(FilterCtx):
 
 
 class MatchQueryCtx(CtxMixin):
+
     def __init__(self, query, raw=False):
         super(MatchQueryCtx, self).__init__()
         self.query = query
@@ -182,6 +183,7 @@ class MatchQueryCtx(CtxMixin):
 
 
 class FieldCtx(CtxMixin):
+
     def __init__(self, field):
         super(FieldCtx, self).__init__()
         self.field = field
@@ -208,6 +210,7 @@ class FieldCtx(CtxMixin):
 
 
 class AliasFieldCtx(CtxMixin):
+
     def __init__(self, field, alias):
         super(AliasFieldCtx, self).__init__()
         self.field = field
@@ -260,6 +263,7 @@ class AliasFieldCtx(CtxMixin):
 
 
 class OrderCtx(CtxMixin):
+
     def __init__(self, field, direction):
         super(OrderCtx, self).__init__()
         self.field = field
@@ -284,8 +288,8 @@ class OrderCtx(CtxMixin):
                 exc_val=SphinxQLSyntaxException('The field is empty')
             )
         if (
-                    not isinstance(self.direction, six.string_types)
-                or self.direction.upper() not in ('ASC', 'DESC')
+            not isinstance(self.direction, six.string_types)
+            or self.direction.upper() not in ('ASC', 'DESC')
         ):
             return self.__exit__(
                 exc_val=SphinxQLSyntaxException(
@@ -297,6 +301,7 @@ class OrderCtx(CtxMixin):
 
 
 class LimitCtx(CtxMixin):
+
     def __init__(self, offset, limit):
         super(LimitCtx, self).__init__()
         self.offset = offset
@@ -332,6 +337,7 @@ class LimitCtx(CtxMixin):
 
 
 class OptionsCtx(CtxMixin):
+
     def __init__(self, option, params):
         super(OptionsCtx, self).__init__()
         self.option = option
@@ -444,9 +450,9 @@ class OptionsCtx(CtxMixin):
             value = int_from_digit(value, is_strict=self.is_strict)
             if not value:
                 if not self.__exit__(
-                        exc_val=SphinxQLSyntaxException(
-                            'One of the "field_weights" is not valid integer value'
-                        )
+                    exc_val=SphinxQLSyntaxException(
+                        'One of the "field_weights" is not valid integer value'
+                    )
                 ):
                     continue
             else:
@@ -473,9 +479,9 @@ class OptionsCtx(CtxMixin):
             value = int_from_digit(value, self.is_strict)
             if not value:
                 if not self.__exit__(
-                        exc_val=SphinxQLSyntaxException(
-                            'One of the "index_weights" is not valid integer value'
-                        )
+                    exc_val=SphinxQLSyntaxException(
+                        'One of the "index_weights" is not valid integer value'
+                    )
                 ):
                     continue
             else:
@@ -507,6 +513,7 @@ class OptionsCtx(CtxMixin):
 
 
 class UpdateSetCtx(CtxMixin):
+
     def __init__(self, k_attr, v_attr):
         super(UpdateSetCtx, self).__init__()
         self.k_attr = k_attr
@@ -528,22 +535,22 @@ class UpdateSetCtx(CtxMixin):
 
         if isinstance(self.v_attr, (list, tuple)):
             v_attr = '(%s)' % ','.join([
-                                           str(v) for v in list_of_integers_only(
+                str(v) for v in list_of_integers_only(
                     self.v_attr,
                     self.is_strict,
                 )
-                                           ])
+            ])
         elif (
-                    isinstance(self.v_attr, six.string_types)
-                and self.v_attr.isdigit()
+            isinstance(self.v_attr, six.string_types)
+            and self.v_attr.isdigit()
         ):
             v_attr = self.v_attr
         elif isinstance(self.v_attr, (six.integer_types, float)):
             v_attr = str(self.v_attr)
         elif (
-                        isinstance(self.v_attr, six.string_types)
-                    and not bool(self.v_attr.strip())
-                or self.v_attr is None
+            isinstance(self.v_attr, six.string_types)
+            and not bool(self.v_attr.strip())
+            or self.v_attr is None
         ):
             v_attr = '()'
         else:
@@ -557,6 +564,7 @@ class UpdateSetCtx(CtxMixin):
 
 
 class SnippetsOptionsCtx(CtxMixin):
+
     def __init__(self, option, params):
         super(SnippetsOptionsCtx, self).__init__()
         self.option = option
