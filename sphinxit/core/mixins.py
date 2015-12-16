@@ -14,6 +14,7 @@ from .exceptions import ImproperlyConfigured
 
 
 class MagicMixin(object):
+
     def __bool__(self):
         return True
 
@@ -28,6 +29,7 @@ class MagicMixin(object):
 
 
 class ConfigMixin(MagicMixin):
+
     def __init__(self):
         self._config = None
 
@@ -56,6 +58,7 @@ class ConfigMixin(MagicMixin):
 
 
 class CtxMixin(ConfigMixin):
+
     def __exit__(self, exc_type=None, exc_val=None, exc_tb=None):
         if exc_val is not None and self.is_strict:
             raise exc_val

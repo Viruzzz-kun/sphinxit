@@ -41,6 +41,7 @@ from sphinxit.core.connector import SphinxConnector
 
 
 class LazySelectTree(ConfigMixin):
+
     def __init__(self, indexes):
         self._indexes = indexes
         self._nodes = OrderedDict([
@@ -167,9 +168,9 @@ class LazySnippetsTree(ConfigMixin):
     def lex(self):
         return self._template.format(
             conditions=', '.join([
-                                     x.lex()
-                                     for x in sparse_free_sequence(self._snippets_syntax.values())
-                                     ])
+                x.lex()
+                for x in sparse_free_sequence(self._snippets_syntax.values())
+            ])
         )
 
 
@@ -178,11 +179,11 @@ def copy_tree(method):
         self_copy = self.__class__(self.indexes, self.config, self.connector)
         self_copy._nodes = self._nodes.copy()
         return method(self_copy, *args, **kwargs)
-
     return wrapper
 
 
 class Search(ConfigMixin):
+
     def __init__(self, indexes, config, connector=None):
         super(Search, self).__init__()
         self._nodes = LazySelectTree(indexes=indexes).with_config(config)
@@ -274,8 +275,8 @@ class Search(ConfigMixin):
             actual_nodes = self._nodes.get_select_nodes()
 
         return ' '.join([
-                            x.lex() for x in sparse_free_sequence(actual_nodes)
-                            ])
+            x.lex() for x in sparse_free_sequence(actual_nodes)
+        ])
 
     def ask(self, subqueries=None, facets=None):
         facets_used = False
@@ -288,13 +289,14 @@ class Search(ConfigMixin):
 
         if subqueries is not None:
             query_batch.extend([
-                                   (s_inst.lex(), getattr(s_inst, '_name', 'result_%s' % id(s_inst)))
-                                   for s_inst in subqueries
-                                   ])
+                (s_inst.lex(), getattr(s_inst, '_name', 'result_%s' % id(s_inst)))
+                for s_inst in subqueries
+            ])
         return self.connector.execute(query_batch, facets_used=True)
 
 
 class Snippet(ConfigMixin):
+
     def __init__(self, index=None, config=None, connector=None):
         super(Snippet, self).__init__()
         self._snippets_tree = LazySnippetsTree(index=index).with_config(config)

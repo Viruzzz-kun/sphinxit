@@ -18,6 +18,7 @@ from .exceptions import ImproperlyConfigured, SphinxQLDriverException
 
 
 class SphinxConnector(ConfigMixin):
+
     def __init__(self, config):
         connection_options = {
             'host': '127.0.0.1',
