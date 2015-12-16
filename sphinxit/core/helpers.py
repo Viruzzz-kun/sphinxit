@@ -35,6 +35,10 @@ def string_from_string(value, is_strict=False):
     return value
 
 
+def string_for_value(value, is_strict=False):
+    clean_value = string_from_string(value, is_strict)
+    return "'%s'" % clean_value
+
 def list_of_integers_only(sequence, is_strict=False):
     cleaned_sequence = []
     for orig_value in sequence:
@@ -49,7 +53,7 @@ def list_of_strings_only(sequence, is_strict=False):
     for orig_value in sequence:
         clean_value = string_from_string(orig_value, is_strict)
         if clean_value is not None:
-            cleaned_sequence.append(clean_value)
+            cleaned_sequence.append( "'%s'" % clean_value)
     return cleaned_sequence
 
 
