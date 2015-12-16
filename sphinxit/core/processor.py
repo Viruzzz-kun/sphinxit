@@ -53,7 +53,6 @@ class LazySelectTree(ConfigMixin):
             ('WithinGroupOrderBy', None),
             ('Limit', None),
             ('Options', None),
-            ('Facets', None),
         ])
         super(LazySelectTree, self).__init__()
 
