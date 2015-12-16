@@ -279,9 +279,7 @@ class Search(ConfigMixin):
         ])
 
     def ask(self, subqueries=None):
-
         query_batch = [(self.lex(), getattr(self, '_name', 'result'))]
-
         if subqueries is not None:
             query_batch.extend([
                 (s_inst.lex(), getattr(s_inst, '_name', 'result_%s' % id(s_inst)))
