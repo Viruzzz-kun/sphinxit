@@ -13,7 +13,7 @@ setup(
     long_description='Lite and powerful SphinxQL query constructor',
     install_requires=[
         "six >= 1.1.0",
-        "oursql >= 0.9.3",
+        # "oursql >= 0.9.3",
         "ordereddict >= 1.1",
     ],
     classifiers=[
