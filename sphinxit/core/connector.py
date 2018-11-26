@@ -41,9 +41,9 @@ class SphinxConnector(ConfigMixin):
                 pass
         elif sql_engine == 'mysqldb':
             try:
-                import MySQLdb
-                import MySQLdb.cursors
-                self.sql_client = MySQLdb
+                import pymysql
+                import pymysql.cursors
+                self.sql_client = pymysql
                 self.mysqldb = True
             except ImportError:
                 pass
