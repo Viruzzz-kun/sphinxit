@@ -375,15 +375,14 @@ class OptionsCtx(CtxMixin):
             'matchany',
             'fieldmask',
             'sph04',
-            'expr',
         )
-        if not ranker in valid_rankers:
+        if not (ranker in valid_rankers or re.match(r'^expr\(.+\)$', ranker)):
             return self.__exit__(
                 exc_val=SphinxQLSyntaxException(
                     '%s is unknown ranker. '
                     'Valid values are %s' % (
                         ranker,
-                        ', '.join(['"%s"' % r for r in valid_rankers])
+                        ', '.join(['"%s"' % r for r in (valid_rankers + ('expr(...)',))])
                     )
                 )
             )
